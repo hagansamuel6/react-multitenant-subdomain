@@ -1,23 +1,39 @@
 import { useState } from 'react';
-import { DatePicker, message, Button, Space, Checkbox, Form, Input, Row, Col } from 'antd';
+import { DatePicker, message, Button, Space, Checkbox, Form, Input, notification, Col } from 'antd';
 import { Login as GetToken } from '../../api/subdomainapi';
 import { useMutation } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import useAuth from '../../hooks/useAuth';
 
 export const Login = () => {
 
   const navigate = useNavigate();
+  const location = useLocation();
+
+  let auth = useAuth();
+
+  let from = location?.state?.from?.pathname || "/"
 
   //this is how we make a call to log us in
   const mutation = useMutation({
     mutationFn: GetToken,
     onSuccess: (data) => {
-      navigate('/')
+      
+      if (auth.isLoggedin) {
+        navigate(from, {replace: true})
+      }
+    },
+    onError: (err : any) => {
+      notification.error(err?.message)
     }
   });
 
   const onFinish = (values: any) => {
-   mutation.mutate(values)
+  //  mutation.mutate(values)
+    auth.signIn("jlhgjlhl", () => {
+      navigate(from, {replace: true})
+    })
+
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -25,7 +41,7 @@ export const Login = () => {
   };
 
   return (
-    <div>
+    <Col span={12} offset={6} style={{marginTop: '90px'}}>
       <Form
         name="basic"
         labelCol={{ span: 8 }}
@@ -61,7 +77,7 @@ export const Login = () => {
           </Button>
         </Form.Item>
       </Form>
-    </div>
+    </Col>
 
 
 
