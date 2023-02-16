@@ -2,6 +2,8 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
 
+
+
 import {
   QueryClient,
   QueryClientProvider,
@@ -9,6 +11,7 @@ import {
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import 'antd/dist/reset.css';
 import AuthProvider from './providers/AuthProvider'
+import "./index.css";
 
 
 const queryClient = new QueryClient();
